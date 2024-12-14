@@ -11,6 +11,7 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({ name: '', status: '', species: '' }); // Çoklu filtre
+  const [pageSize, setPageSize] = useState(50); // Sayfa boyutunu kontrol eden state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,6 +78,7 @@ const App = () => {
     <div>
       <h1>Rick and Morty Karakter Tablosu</h1>
 
+      {/* Filtreleme Alanları */}
       <div>
         <input
           type="text"
@@ -99,11 +101,26 @@ const App = () => {
         />
       </div>
 
+      {/* Sayfa Boyutunu Seçme */}
+      <div>
+        <label htmlFor="pageSize">Sayfa Boyutu:</label>
+        <select
+          id="pageSize"
+          value={pageSize}
+          onChange={(e) => setPageSize(Number(e.target.value))}
+        >
+          <option value={25}>25</option>
+          <option value={50}>50</option>
+          <option value={100}>100</option>
+          <option value={200}>200</option>
+        </select>
+      </div>
+
       {error && <p>{error}</p>}
       {loading ? (
         <p>Yükleniyor...</p>
       ) : filteredData.length > 0 ? (
-        <Table data={filteredData} onRowClick={setSelectedCharacter} />
+        <Table data={filteredData} onRowClick={setSelectedCharacter} pageSize={pageSize} />
       ) : (
         <p>Hiçbir sonuç bulunamadı.</p>
       )}
